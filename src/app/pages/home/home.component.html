@@ -1,0 +1,70 @@
+<div class="home-container">
+  <header class="header">
+    <div class="header-content">
+      <h1 class="logo">{{ restaurantName }}</h1>
+      <nav class="nav">
+        <a routerLink="/login" class="nav-link">Iniciar Sesión</a>
+        <a routerLink="/register" class="nav-link nav-link-register">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="hero-content">
+      <h2 class="hero-title">Bienvenido(s) a {{ restaurantName }}</h2>
+      <p class="hero-tagline">{{ tagline }}</p>
+      <p class="hero-description">
+        En ToliCars, disponemos de una amplia gama de vehículos para satisfacer todas tus necesidades de transporte. Desde 
+        coches compactos y económicos hasta SUV espaciosos, deportivos y lujosos, tenemos el vehículo perfecto para ti.
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/menu" class="btn btn-primary">Ver Catálogo</a>
+        <a routerLink="/register" class="btn btn-secondary">Reservar Carro</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="image-placeholder">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 2 0 0 0 2-2V2M3 2h6m0 0v7c0 1.1.9 2 2 2h4a2 2 2 0 0 0 2-2V2m-6 0h6m-6 0v9m6-9v9m-6 0h6m0 0v7c0 1.1-.9 2-2 2h-4a2 2 2 0 0 1-2-2v-7m6 0H9"/>
+        </svg> 
+        <img src="assets/pages/home/images/racing-car-with-side-skirts-svgrepo-com.svg" alt="Buscar" class="search-icon"-->
+      </div>
+    </div>
+  </main>
+
+  <section class="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🚗</div>
+        <h3 class="feature-title">Carros económicos</h3>
+        <p class="feature-description">
+          Cada platillo es preparado con técnicas tradicionales y ingredientes de la más alta calidad.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚙</div>
+        <h3 class="feature-title">SUVs</h3>
+        <p class="feature-description">
+          Ambiente cálido y acogedor para disfrutar en familia o con amigos.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏎</div>
+        <h3 class="feature-title">Carros deportivos & lujosos</h3>
+        <p class="feature-description">
+          Amplia selección de platos para todos los gustos y preferencias dietéticas.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; {{ currentYear }} {{ restaurantName }}. Todos los derechos reservados.</p>
+      <button type="button" (click)="seedProducts()" class="btn-seed" title="Poblar productos de ejemplo">
+        🌱 Poblar Productos
+      </button>
+    </div>
+  </footer>
+</div>
+

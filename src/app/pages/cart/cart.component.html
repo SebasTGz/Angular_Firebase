@@ -1,0 +1,131 @@
+<div class="cart-container">
+  <header class="cart-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="logo">ToliCars</h1>
+        <p class="subtitle">Carrito de Compras</p>
+      </div>
+      <nav class="nav">
+        <a routerLink="/menu" class="nav-link">Menú</a>
+        <a routerLink="/home" class="nav-link">Inicio</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="cart-content">
+    @if (cartItems().length === 0) {
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <h2>Tu carrito está vacío</h2>
+        <p>Agrega productos desde el menú</p>
+        <a routerLink="/menu" class="btn btn-primary">Ver Catálogo</a>
+      </div>
+    } @else {
+      <div class="cart-layout">
+        <div class="cart-items-section">
+          <div class="cart-header-section">
+            <h2>Productos en tu carrito</h2>
+            <button type="button" (click)="clearCart()" class="btn-clear">
+              Limpiar carrito
+            </button>
+          </div>
+
+          <div class="cart-items">
+            @for (item of cartItems(); track item.product.id) {
+              <div class="cart-item">
+                <div class="item-info">
+                  <h3 class="item-name">{{ item.product.nombre }}</h3>
+                  <p class="item-description">{{ item.product.descripcion }}</p>
+                  <div class="item-meta">
+                    <span class="category-badge">{{ item.product.categoria }}</span>
+                    <span class="price">Precio unitario: {{ formatPrice(item.product.precio) }}</span>
+                  </div>
+                </div>
+
+                <div class="item-controls">
+                  <div class="quantity-controls">
+                    <button
+                      type="button"
+                      class="qty-btn"
+                      (click)="updateQuantity(item.product.id, item.quantity - 1)"
+                      [disabled]="item.quantity <= 1"
+                    >
+                      −
+                    </button>
+                    <span class="quantity">{{ item.quantity }}</span>
+                    <button
+                      type="button"
+                      class="qty-btn"
+                      (click)="updateQuantity(item.product.id, item.quantity + 1)"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <div class="item-subtotal">
+                    <span class="subtotal-label">Subtotal:</span>
+                    <span class="subtotal-value">{{ formatSubtotal(getItemSubtotal(item)) }}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn-remove"
+                    (click)="removeItem(item.product.id)"
+                    title="Eliminar"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="cart-summary">
+          <div class="summary-card">
+            <h2>Resumen del Pedido</h2>
+            
+            <div class="summary-details">
+              <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>{{ formatTotal(cartTotal()) }}</span>
+              </div>
+              <div class="summary-row">
+                <span>Impuestos:</span>
+                <span>$0.00</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total:</span>
+                <span>{{ formatTotal(cartTotal()) }}</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-checkout"
+              (click)="checkout()"
+              [disabled]="isLoading() || cartItems().length === 0"
+            >
+              @if (isLoading()) {
+                <svg class="spinner" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                Procesando...
+              } @else {
+                Realizar Pedido
+              }
+            </button>
+
+            <a routerLink="/menu" class="continue-shopping">
+              ← Continuar comprando
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
