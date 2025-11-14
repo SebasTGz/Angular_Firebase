@@ -24,5 +24,22 @@ service cloud.firestore {
     match /carts/{userId} {
       allow read, write: if isOwner(userId);
     }
+    
+    // Orders collection - only authenticated users can create orders
+    // and users can read their own orders. For creation we require that
+    // the incoming document's userId matches the authenticated uid.
+    match /orders/{orderId} {
+      // Allow creating an order if the request is authenticated and
+      // the order.userId equals the authenticated uid.
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid
+        // Basic validation for required fields on create
+        && request.resource.data.orderId is string
+        && request.resource.data.userEmail is string
+        && request.resource.data.items is list
+        && request.resource.data.total is number;
+
+      // Allow read/update/delete only for the owner of the order
+      allow read, update, delete: if resource.data.userId == request.auth.uid;
+    }
   }
 }

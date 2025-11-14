@@ -1,3 +1,4 @@
+<!-- ANTIGUO
 <div class="menu-container">
   <header class="menu-header">
     <div class="header-content">
@@ -95,4 +96,113 @@
     }
   </div>
 </div>
+-->
 
+<!-- NUEVO -->
+<div class="menu-container">
+  <header class="menu-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="logo">ToliCars</h1>
+        <p class="subtitle">
+          Catálogo - 
+          <button 
+            type="button" 
+            class="data-source-toggle"
+            (click)="toggleDataSource()"
+            title="Cambiar fuente de datos"
+          >
+            {{ getDataSourceIcon() }} {{ getDataSourceText() }}
+          </button>
+        </p>
+      </div>
+      <nav class="nav">
+        <a routerLink="/home" class="nav-link">Inicio</a>
+        <a routerLink="/cart" class="nav-link cart-link">
+          🛒 Carrito
+          @if (getCartItemCount() > 0) {
+            <span class="cart-badge">{{ getCartItemCount() }}</span>
+          }
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="menu-content">
+    <div class="filters-section">
+      <div class="search-bar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input
+          type="text"
+          placeholder="Buscar productos..."
+          (input)="onSearchChange($any($event.target).value)"
+          class="search-input"
+        />
+      </div>
+
+      <div class="category-filters">
+        @for (category of categories(); track category) {
+          <button
+            type="button"
+            class="category-btn"
+            [class.active]="selectedCategory() === category"
+            (click)="selectCategory(category)"
+          >
+            {{ category }}
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando productos desde {{ getDataSourceText() }}...</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="error-container">
+        <p>{{ errorMessage() }}</p>
+        <button type="button" (click)="loadProducts()" class="btn btn-primary">
+          Reintentar
+        </button>
+      </div>
+    } @else if (getFilteredProducts().length === 0) {
+      <div class="empty-container">
+        <p>No se encontraron productos</p>
+      </div>
+    } @else {
+      <div class="products-grid">
+        @for (product of getFilteredProducts(); track product.id) {
+          <div class="product-card">
+            <div class="product-header">
+              <h3 class="product-name">{{ product.marca }}</h3>
+              <span class="product-price">{{ formatPrice(product.precio) }}</span>
+            </div>
+            <p class="product-description">{{ product.color }}</p>
+            <div class="product-footer">
+              <div class="product-category">
+                <span class="category-badge">{{ product.modelo }}</span>
+                <span class="subcategory-badge">{{ product.marca }}</span>
+              </div>
+              <button
+                type="button"
+                class="btn btn-add-cart"
+                (click)="addToCart(product)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                Agregar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

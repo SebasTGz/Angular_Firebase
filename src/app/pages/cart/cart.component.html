@@ -1,4 +1,5 @@
-<div class="cart-container">
+<!--ANTIGU0-->
+<!-- <div class="cart-container">
   <header class="cart-header">
     <div class="header-content">
       <div class="header-left">
@@ -128,4 +129,202 @@
     }
   </div>
 </div>
+-->
 
+<!--NUEVO-->
+<div class="cart-container">
+  <header class="cart-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="logo">ToliCars</h1>
+        <p class="subtitle">Carrito de Compras</p>
+      </div>
+      <nav class="nav">
+        <a routerLink="/menu" class="nav-link">Menú</a>
+        <a routerLink="/home" class="nav-link">Inicio</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="cart-content">
+    @if (orderSuccess()) {
+      <div class="success-container">
+        <div class="success-icon">✅</div>
+        <h2>¡Pedido Realizado Exitosamente!</h2>
+        <p class="order-number">Número de Orden: <strong>{{ orderNumber() }}</strong></p>
+        <p class="success-message">
+          Tu pedido ha sido registrado correctamente. 
+          Recibirás una notificación cuando esté listo.
+        </p>
+        <p class="redirect-message">Redirigiendo a inicio...</p>
+      </div>
+    } @else if (cartItems().length === 0) {
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <h2>Tu carrito está vacío</h2>
+        <p>Agrega productos desde el menú</p>
+        <a routerLink="/menu" class="btn btn-primary">Ver Catálogo</a>
+      </div>
+    } @else {
+      <div class="cart-layout">
+        <div class="cart-items-section">
+          <div class="cart-header-section">
+            <h2>Productos en tu carrito</h2>
+            <button type="button" (click)="clearCart()" class="btn-clear">
+              Limpiar carrito
+            </button>
+          </div>
+
+          <div class="cart-items">
+            @for (item of cartItems(); track item.product.id) {
+              <div class="cart-item">
+                <div class="item-info">
+                  <h3 class="item-name">{{ item.product.marca }}</h3>
+                  <p class="item-description">{{ item.product.color }}</p>
+                  <div class="item-meta">
+                    <span class="category-badge">{{ item.product.modelo }}</span>
+                    <span class="price">Precio unitario: {{ formatPrice(item.product.precio) }}</span>
+                  </div>
+                </div>
+
+                <div class="item-controls">
+                  <div class="quantity-controls">
+                    <button
+                      type="button"
+                      class="qty-btn"
+                      (click)="updateQuantity(item.product.id, item.quantity - 1)"
+                      [disabled]="item.quantity <= 1"
+                    >
+                      −
+                    </button>
+                    <span class="quantity">{{ item.quantity }}</span>
+                    <button
+                      type="button"
+                      class="qty-btn"
+                      (click)="updateQuantity(item.product.id, item.quantity + 1)"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <div class="item-subtotal">
+                    <span class="subtotal-label">Subtotal:</span>
+                    <span class="subtotal-value">{{ formatSubtotal(getItemSubtotal(item)) }}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn-remove"
+                    (click)="removeItem(item.product.id)"
+                    title="Eliminar"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="cart-summary">
+          <div class="summary-card">
+            <h2>Resumen del Pedido</h2>
+            
+            <div class="summary-details">
+              <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>{{ formatTotal(cartTotal()) }}</span>
+              </div>
+              <div class="summary-row">
+                <span>IVA (16%):</span>
+                <span>{{ formatTotal(getTax()) }}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total:</span>
+                <span>{{ formatTotal(getFinalTotal()) }}</span>
+              </div>
+            </div>
+
+            @if (!showCheckoutForm()) {
+              <button
+                type="button"
+                class="btn btn-checkout"
+                (click)="toggleCheckoutForm()"
+                [disabled]="isLoading() || cartItems().length === 0"
+              >
+                Proceder al Pago
+              </button>
+            } @else {
+              <form [formGroup]="checkoutForm" (ngSubmit)="checkout()" class="checkout-form">
+                <div class="form-group">
+                  <label for="paymentMethod" class="form-label">Método de Pago</label>
+                  <select
+                    id="paymentMethod"
+                    formControlName="paymentMethod"
+                    class="form-input"
+                  >
+                    <option value="cash">Efectivo</option>
+                    <option value="card">Tarjeta</option>
+                    <option value="online">Pago en línea</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="deliveryAddress" class="form-label">Dirección de Entrega</label>
+                  <textarea
+                    id="deliveryAddress"
+                    formControlName="deliveryAddress"
+                    class="form-input"
+                    rows="3"
+                    placeholder="Ingresa tu dirección completa"
+                  ></textarea>
+                  @if (getFieldError('deliveryAddress')) {
+                    <span class="error-message">{{ getFieldError('deliveryAddress') }}</span>
+                  }
+                </div>
+
+                <div class="form-group">
+                  <label for="notes" class="form-label">Notas (Opcional)</label>
+                  <textarea
+                    id="notes"
+                    formControlName="notes"
+                    class="form-input"
+                    rows="2"
+                    placeholder="Instrucciones especiales..."
+                  ></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="toggleCheckoutForm()"
+                    [disabled]="isLoading()"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-checkout"
+                    [disabled]="checkoutForm.invalid || isLoading()"
+                  >
+                    @if (isLoading()) {
+                      <span class="spinner">⏳</span>
+                      Procesando...
+                    } @else {
+                      Confirmar Pedido
+                    }
+                  </button>
+                </div>
+              </form>
+            }
+
+            <a routerLink="/menu" class="continue-shopping">
+              ← Continuar comprando
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

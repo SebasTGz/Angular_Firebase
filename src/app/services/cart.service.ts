@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, effect } from '@angular/core';
 import { Firestore, collection, doc, setDoc, getDoc, deleteDoc, updateDoc } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { CartItem, Product, CartDocument } from '../models/product.interface';
+import { CartItem, Carro, CartDocument } from '../models/product.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class CartService {
     }, 0);
   }
 
-  async addToCart(product: Product, quantity: number = 1): Promise<void> {
+  async addToCart(product: Carro, quantity: number = 1): Promise<void> {
     const currentItems = this.cartItems();
     const existingItem = currentItems.find(item => item.product.id === product.id);
 
