@@ -179,7 +179,10 @@
           <div class="product-card">
             <div class="product-header">
               <h3 class="product-name">{{ product.marca }}</h3>
-              <span class="product-price">{{ formatPrice(product.precio) }}</span>
+              <div class="price-block">
+                <span class="product-price">{{ formatPrice(product.precio) }}</span>
+                <span class="year-badge">{{ product.anio }}</span>
+              </div>
             </div>
             <p class="product-description">{{ product.color }}</p>
             <div class="product-footer">
